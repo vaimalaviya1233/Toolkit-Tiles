@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 
 object TileAccessibilityAction {
+
     @RequiresApi(Build.VERSION_CODES.P)
     const val LOCK_SCREEN = AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN
 

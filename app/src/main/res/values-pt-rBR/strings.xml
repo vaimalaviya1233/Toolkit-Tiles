@@ -1,18 +1,20 @@
 <resources>
 
-    <!--app names-->
-    <string name="app_name">Toolkit Tiles</string>
-
     <!--notification service-->
 
-    <string name="channel_name">Serviço</string>
+    <string name="channel_name">Serviços do atalho</string>
     <string name="notification_title">Serviço em execução</string>
-    <string name="notification_label">Toque aqui para ocultar esta notificação</string>
+    <string name="notification_label">Algum atalho esta em execução, desative o atalho no painel de configurações rapidas ou toque aqui para ocultar esta notificação</string>
 
     <!--accessibility service-->
 
-    <string name="accessibility_service_description">Este aplicativo usa serviços de acessibilidade para que alguns de seus blocos funcionem. Esta permissão é essencial para que esses blocos funcionem corretamente e forneçam acesso rápido a determinados recursos do dispositivo.</string>
+    <string name="accessibility_service_description">Este aplicativo usa serviços de acessibilidade para que alguns de seus atalhos no painel de configurações rapidas funcionem. Essa permissão é essencial para que esses atalhos funcionem corretamente e forneçam acesso rápido a determinados recursos do dispositivo.</string>
+
+    <!--permission messages-->
+
     <string name="accessibility_permission_message">Permissão de acessibilidade necessária. Por favor, ative-a primeiro</string>
+    <string name="dnd_access_permission_message">Permissão de acesso a Não Perturbe necessária. Por favor, ative-a primeiro</string>
+    <string name="write_settings_permission_message">Permissão para modificar configurações necessária. Por favor, ative-a primeiro</string>
 
     <!--messages-->
 
@@ -20,15 +22,16 @@
 
     <!--general state tile-->
 
-    <string name="tile_label_on">Ativado</string>
-    <string name="tile_label_off">Desativado</string>
-    <string name="tile_label_setup">Toque para configurar</string>
-    <string name="tile_label_unavailable">Indisponível</string>
-    <string name="tile_label_not_supported">Não suportado</string>
+    <string name="tile_on">Ligado</string>
+    <string name="tile_off">Desligado</string>
+    <string name="tile_setup">Toque para configurar</string>
+    <string name="tile_switch">Toque para alternar</string>
+    <string name="tile_unavailable">Indisponível</string>
+    <string name="tile_not_supported">Não suportado</string>
 
     <!--compass tile-->
 
-    <string name="compass_tile_label">Bússola</string>
+    <string name="compass_tile">Bússola</string>
     <!--tile label-->
     <string name="N">Norte</string>
     <string name="NE">Nordeste</string>
@@ -41,51 +44,66 @@
 
     <!--bubble level tile-->
 
-    <string name="level_tile_label">Nível</string>
+    <string name="level_tile">Nível</string>
 
     <!--lux meter tile-->
 
-    <string name="lux_meter_tile_label">Luxímetro</string>
+    <string name="lux_meter_tile">Luxímetro</string>
 
     <!--lock screen tile-->
 
-    <string name="lock_tile_label">Bloquear</string>
+    <string name="lock_tile">Bloquear</string>
 
     <!--coin flip tile-->
 
-    <string name="coin_flip_tile_label">Cara ou coroa</string>
+    <string name="coin_flip_tile">Jogar moeda</string>
     <!--tile label-->
-    <string name="coin_flip_label">Jogar moeda</string>
-    <string name="coin_flip_count">Cara: %1$d Coroa: %2$d</string>
-    <string name="coin_heads_label">Cara</string>
-    <string name="coin_tails_label">Coroa</string>
+    <string name="coin_flip_tile_tap">Toque para jogar</string>
+    <string name="coin_flip_tile_count">Cara: %1$d Coroa: %2$d</string>
+    <string name="coin_tile_heads">Cara</string>
+    <string name="coin_tile_tails">Coroa</string>
 
     <!--dice roll tile-->
 
-    <string name="dice_roll_tile_label">Jogar dado</string>
+    <string name="dice_roll_tile">Rolar dado</string>
     <!--tile label-->
-    <string name="dice_roll_label">Toque para jogar</string>
-    <string name="dice_rolling_label">Rolando…</string>
-    <string name="dice_1_label">Um</string>
-    <string name="dice_2_label">Dois</string>
-    <string name="dice_3_label">Três</string>
-    <string name="dice_4_label">Quatro</string>
-    <string name="dice_5_label">Cinco</string>
-    <string name="dice_6_label">Seis</string>
+    <string name="dice_roll_tile_tap">Toque para jogar</string>
+    <string name="dice_roll_tile_rolling">Rolando…</string>
+    <string name="dice_tile_1">Um</string>
+    <string name="dice_tile_2">Dois</string>
+    <string name="dice_tile_3">Três</string>
+    <string name="dice_tile_4">Quatro</string>
+    <string name="dice_tile_5">Cinco</string>
+    <string name="dice_tile_6">Seis</string>
 
     <!--sos tile-->
 
-    <string name="sos_tile_label">SOS</string>
+    <string name="sos_tile">SOS</string>
 
     <!--counter tile-->
 
-    <string name="counter_tile_label">Contador</string>
+    <string name="counter_tile">Contador</string>
     <!--tile label-->
-    <string name="counter_add_tile_label">Adicionar</string>
-    <string name="counter_remove_tile_label">Remover</string>
-    <string name="counter_reset_tile_label">Redefinir</string>
+    <string name="counter_tile_add">Adicionar</string>
+    <string name="counter_tile_remove">Remover</string>
+    <string name="counter_tile_reset">Resetar</string>
 
     <!--screenshot tile-->
 
-    <string name="screenshot_tile_label">Captura de tela</string>
+    <string name="screenshot_tile">Captura de tela</string>
+
+    <!--sound mode tile-->
+
+    <string name="sound_mode_tile">Modo de som</string>
+    <!--tile label-->
+    <string name="sound_tile_normal">Normal</string>
+    <string name="sound_tile_silent">Silencioso</string>
+    <string name="sound_tile_vibrate">Vibrar</string>
+
+    <!--caffeine tile-->
+
+    <string name="caffeine_tile">Cafeína</string>
+    <!--tile label-->
+    <string name="caffeine_tile_minutes">%1$d minutos</string>
+    <string name="caffeine_tile_infinite">Infinito</string>
 </resources>

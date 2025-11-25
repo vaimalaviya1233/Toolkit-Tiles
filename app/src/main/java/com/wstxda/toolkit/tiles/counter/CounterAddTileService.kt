@@ -1,57 +1,47 @@
 package com.wstxda.toolkit.tiles.counter
 
-import android.content.ComponentName
-import android.graphics.drawable.Icon
-import android.os.Build
 import android.service.quicksettings.Tile
-import android.service.quicksettings.TileService
-import android.util.Log
-import com.wstxda.toolkit.R
-import com.wstxda.toolkit.utils.CounterValue
-import com.wstxda.toolkit.services.update
+import com.wstxda.toolkit.base.BaseTileService
+import com.wstxda.toolkit.manager.counter.CounterAction
+import com.wstxda.toolkit.manager.counter.CounterManager
+import com.wstxda.toolkit.ui.icon.CounterIconProvider
+import com.wstxda.toolkit.ui.label.CounterLabelProvider
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
 
-private const val TAG = "CounterAddTileService"
+class CounterAddTileService : BaseTileService() {
 
-class CounterAddTileService : TileService() {
+    private lateinit var counterLabelProvider: CounterLabelProvider
+    private lateinit var counterIconProvider: CounterIconProvider
+
+    override fun onCreate() {
+        super.onCreate()
+        CounterManager.initialize(this)
+        counterLabelProvider = CounterLabelProvider(this)
+        counterIconProvider = CounterIconProvider(this)
+    }
 
     override fun onStartListening() {
-        Log.i(TAG, "Start listening")
         super.onStartListening()
-        updateTile()
+        combine(CounterManager.count, CounterManager.lastAction) { _, _ ->
+            updateTile()
+        }.launchIn(serviceScope)
     }
 
     override fun onClick() {
-        Log.i(TAG, "Click")
-        super.onClick()
-        CounterValue.add(applicationContext)
-        updateTile()
-        requestListeningState(
-            applicationContext,
-            ComponentName(applicationContext, CounterRemoveTileService::class.java)
-        )
+        CounterManager.increment()
     }
 
-    private fun updateTile() {
-        val value = CounterValue.getValue(applicationContext)
-        val lastAction = CounterValue.getLastAction(applicationContext)
+    override fun updateTile() {
+        val count = CounterManager.count.value
+        val action = CounterManager.lastAction.value
+        val isActive = action == CounterAction.ADD
 
-        qsTile?.update {
-            icon = Icon.createWithResource(applicationContext, R.drawable.ic_counter_add)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                subtitle = getString(R.string.counter_tile_label)
-            }
-
-            when (lastAction) {
-                CounterValue.ACTION_REMOVE, CounterValue.ACTION_RESET -> {
-                    state = Tile.STATE_INACTIVE
-                    label = getString(R.string.counter_add_tile_label)
-                }
-
-                else -> {
-                    state = Tile.STATE_ACTIVE
-                    label = value.toString()
-                }
-            }
-        }
+        setTileState(
+            state = if (isActive) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE,
+            label = counterLabelProvider.getAddLabel(isActive, count),
+            subtitle = counterLabelProvider.getAddSubtitle(isActive),
+            icon = counterIconProvider.getAddIcon()
+        )
     }
 }

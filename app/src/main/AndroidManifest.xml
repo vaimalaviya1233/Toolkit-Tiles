@@ -1,13 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!--foreground service permissions-->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-    <uses-permission
-        android:name="android.permission.FOREGROUND_SERVICE"
-        tools:ignore="ForegroundServicesPolicy" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" tools:ignore="ForegroundServicesPolicy" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
     <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" tools:ignore="ProtectedPermissions" />
 
     <!--use hardware sensors/components-->
 
@@ -37,19 +39,31 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!--activity for tiles-->
+        <!--function activity for tiles-->
 
         <activity
             android:name=".activity.ScreenshotActivity"
             android:exported="false"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <!--accessibility service/activity for tiles-->
+        <!--permission activity for tiles-->
 
         <activity
             android:name=".activity.AccessibilityPermissionActivity"
             android:exported="false"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
+            android:name=".activity.NotificationPolicyPermissionActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
+            android:name=".activity.WriteSettingsPermissionActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!--function services for tiles-->
 
         <service
             android:name=".services.accessibility.TileAccessibilityService"
@@ -65,13 +79,29 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
+        <!--caffeine quick settings tile service-->
+
+        <service
+            android:name=".tiles.power.CaffeineTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_caffeine"
+            android:label="@string/caffeine_tile"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="true" />
+        </service>
+
         <!--coin flip quick settings tile service-->
 
         <service
-            android:name=".tiles.CoinFlipTileService"
+            android:name=".tiles.games.CoinFlipTileService"
             android:exported="true"
-            android:icon="@drawable/ic_coin_off"
-            android:label="@string/coin_flip_tile_label"
+            android:icon="@drawable/ic_coin"
+            android:label="@string/coin_flip_tile"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -84,11 +114,11 @@
         <!--compass quick settings tile service-->
 
         <service
-            android:name=".tiles.CompassTileService"
+            android:name=".tiles.sensors.CompassTileService"
             android:exported="true"
             android:foregroundServiceType="specialUse"
             android:icon="@drawable/ic_compass_off"
-            android:label="@string/compass_tile_label"
+            android:label="@string/compass_tile"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -101,13 +131,57 @@
                 android:value="Required for accessing compass sensor data while tile is active" />
         </service>
 
+        <!--counter quick settings tile services-->
+
+        <service
+            android:name=".tiles.counter.CounterAddTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_counter_add"
+            android:label="@string/counter_tile_add"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="true" />
+        </service>
+
+        <service
+            android:name=".tiles.counter.CounterRemoveTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_counter_remove"
+            android:label="@string/counter_tile_remove"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="true" />
+        </service>
+
+        <service
+            android:name=".tiles.counter.CounterResetTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_counter_reset"
+            android:label="@string/counter_tile_reset"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.INACTIVE_TILE"
+                android:value="true" />
+        </service>
+
         <!--dice roll quick settings tile service-->
 
         <service
-            android:name=".tiles.DiceRollTileService"
+            android:name=".tiles.games.DiceRollTileService"
             android:exported="true"
-            android:icon="@drawable/ic_dice_off"
-            android:label="@string/dice_roll_tile_label"
+            android:icon="@drawable/ic_dice"
+            android:label="@string/dice_roll_tile"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -120,11 +194,11 @@
         <!--bubble level quick settings tile service-->
 
         <service
-            android:name=".tiles.LevelTileService"
+            android:name=".tiles.sensors.LevelTileService"
             android:exported="true"
             android:foregroundServiceType="specialUse"
-            android:icon="@drawable/ic_level_off"
-            android:label="@string/level_tile_label"
+            android:icon="@drawable/ic_level"
+            android:label="@string/level_tile"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -140,11 +214,11 @@
         <!--lock screen quick settings tile service-->
 
         <service
-            android:name=".tiles.LockTileService"
+            android:name=".tiles.system.LockTileService"
             android:enabled="@bool/enable_lock_tile"
             android:exported="true"
             android:icon="@drawable/ic_lock"
-            android:label="@string/lock_tile_label"
+            android:label="@string/lock_tile"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -157,11 +231,11 @@
         <!--lux meter quick settings tile service-->
 
         <service
-            android:name=".tiles.LuxMeterTileService"
+            android:name=".tiles.sensors.LuxMeterTileService"
             android:exported="true"
             android:foregroundServiceType="specialUse"
             android:icon="@drawable/ic_lux_meter_off"
-            android:label="@string/lux_meter_tile_label"
+            android:label="@string/lux_meter_tile"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -174,58 +248,14 @@
                 android:value="Required for accessing light sensor data while tile is active" />
         </service>
 
-        <!--counter quick settings tile services-->
-
-        <service
-            android:name=".tiles.counter.CounterAddTileService"
-            android:exported="true"
-            android:icon="@drawable/ic_counter_add"
-            android:label="@string/counter_add_tile_label"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.service.quicksettings.ACTIVE_TILE"
-                android:value="true" />
-        </service>
-
-        <service
-            android:name=".tiles.counter.CounterRemoveTileService"
-            android:exported="true"
-            android:icon="@drawable/ic_counter_remove"
-            android:label="@string/counter_remove_tile_label"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.service.quicksettings.ACTIVE_TILE"
-                android:value="true" />
-        </service>
-
-        <service
-            android:name=".tiles.counter.CounterResetTileService"
-            android:exported="true"
-            android:icon="@drawable/ic_counter_reset"
-            android:label="@string/counter_reset_tile_label"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.service.quicksettings.INACTIVE_TILE"
-                android:value="true" />
-        </service>
-
         <!--screenshot quick settings tile service-->
 
         <service
-            android:name=".tiles.ScreenshotTileService"
+            android:name=".tiles.system.ScreenshotTileService"
             android:enabled="@bool/enable_screenshot_tile"
             android:exported="true"
             android:icon="@drawable/ic_screenshot"
-            android:label="@string/screenshot_tile_label"
+            android:label="@string/screenshot_tile"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -238,10 +268,26 @@
         <!--sos quick settings tile service-->
 
         <service
-            android:name=".tiles.SosTileService"
+            android:name=".tiles.tools.SosTileService"
             android:exported="true"
             android:icon="@drawable/ic_sos"
-            android:label="@string/sos_tile_label"
+            android:label="@string/sos_tile"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="true" />
+        </service>
+
+        <!--sound mode quick settings tile service-->
+
+        <service
+            android:name=".tiles.audio.SoundModeTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_sound"
+            android:label="@string/sound_mode_tile"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />

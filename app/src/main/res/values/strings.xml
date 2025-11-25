@@ -2,18 +2,23 @@
 
     <!--app names-->
 
-    <string name="app_name">Toolkit Tiles</string>
+    <string name="app_name" translatable="false">Toolkit Tiles</string>
 
     <!--notification service-->
 
-    <string name="channel_name">Service</string>
-    <string name="notification_title">Service is running</string>
-    <string name="notification_label">Tap here to hide this notification</string>
+    <string name="channel_name">Tiles services</string>
+    <string name="notification_title">Service running</string>
+    <string name="notification_label">A tile is running, disable the tile in the quick settings panel or tap here to hide this notification</string>
 
     <!--accessibility service-->
 
-    <string name="accessibility_service_description">This app uses accessibility services for some of its tiles to function. This permission is essential for these tiles to work correctly and provide quick access to certain device features.</string>
+    <string name="accessibility_service_description">This application uses accessibility services so that some of its tiles in the quick settings panel work. This permission is essential for these tiles to work correctly and provide quick access to certain device features.</string>
+
+    <!--permission messages-->
+
     <string name="accessibility_permission_message">Accessibility permission required. Please enable it first</string>
+    <string name="dnd_access_permission_message">Do Not Disturb access permission required. Please enable it first</string>
+    <string name="write_settings_permission_message">Write settings permission required. Please enable it first</string>
 
     <!--messages-->
 
@@ -21,17 +26,18 @@
 
     <!--general state tile-->
 
-    <string name="tile_label_on">On</string>
-    <string name="tile_label_off">Off</string>
-    <string name="tile_label_setup">Tap to setup</string>
-    <string name="tile_label_unavailable">Unavailable</string>
-    <string name="tile_label_not_supported">Not supported</string>
+    <string name="tile_on">On</string>
+    <string name="tile_off">Off</string>
+    <string name="tile_setup">Tap to setup</string>
+    <string name="tile_switch">Tap to switch</string>
+    <string name="tile_unavailable">Unavailable</string>
+    <string name="tile_not_supported">Not supported</string>
 
     <!--compass tile-->
 
-    <string name="compass_tile_label">Compass</string>
+    <string name="compass_tile">Compass</string>
     <!--tile label-->
-    <string name="compass_tile_label_degrees" translatable="false">%1$d° %2$s</string>
+    <string name="compass_tile_degrees" translatable="false">%1$d° %2$s</string>
     <string name="N">N</string>
     <string name="NE">NE</string>
     <string name="E">E</string>
@@ -43,56 +49,71 @@
 
     <!--bubble level tile-->
 
-    <string name="level_tile_label">Level</string>
+    <string name="level_tile">Level</string>
     <!--tile label-->
-    <string name="level_tile_zero_degrees" translatable="false">0°</string>
-    <string name="level_tile_label_degrees" translatable="false">%d°</string>
+    <string name="level_tile_zero" translatable="false">0°</string>
+    <string name="level_tile_degrees" translatable="false">%d°</string>
 
     <!--lux meter tile-->
 
-    <string name="lux_meter_tile_label">Lux Meter</string>
+    <string name="lux_meter_tile">Lux Meter</string>
     <!--tile label-->
-    <string name="lux_meter_tile_label_lux" translatable="false">%d lx</string>
+    <string name="lux_meter_tile_lux" translatable="false">%d lx</string>
 
     <!--lock screen tile-->
 
-    <string name="lock_tile_label">Lock</string>
+    <string name="lock_tile">Lock</string>
 
     <!--coin flip tile-->
 
-    <string name="coin_flip_tile_label">Coin Flip</string>
+    <string name="coin_flip_tile">Coin Flip</string>
     <!--tile label-->
-    <string name="coin_flip_label">Tap to flip</string>
-    <string name="coin_flip_count">Heads: %1$d Tails: %2$d</string>
-    <string name="coin_heads_label">Heads</string>
-    <string name="coin_tails_label">Tails</string>
+    <string name="coin_flip_tile_tap">Tap to flip</string>
+    <string name="coin_flip_tile_count">Heads: %1$d Tails: %2$d</string>
+    <string name="coin_tile_heads">Heads</string>
+    <string name="coin_tile_tails">Tails</string>
 
     <!--dice roll tile-->
 
-    <string name="dice_roll_tile_label">Dice Roll</string>
+    <string name="dice_roll_tile">Dice Roll</string>
     <!--tile label-->
-    <string name="dice_roll_label">Tap to roll</string>
-    <string name="dice_rolling_label">Rolling…</string>
-    <string name="dice_1_label">One</string>
-    <string name="dice_2_label">Two</string>
-    <string name="dice_3_label">Three</string>
-    <string name="dice_4_label">Four</string>
-    <string name="dice_5_label">Five</string>
-    <string name="dice_6_label">Six</string>
+    <string name="dice_roll_tile_tap">Tap to roll</string>
+    <string name="dice_roll_tile_rolling">Rolling…</string>
+    <string name="dice_tile_1">One</string>
+    <string name="dice_tile_2">Two</string>
+    <string name="dice_tile_3">Three</string>
+    <string name="dice_tile_4">Four</string>
+    <string name="dice_tile_5">Five</string>
+    <string name="dice_tile_6">Six</string>
 
     <!--sos tile-->
 
-    <string name="sos_tile_label">SOS</string>
+    <string name="sos_tile">SOS</string>
 
     <!--counter tile-->
 
-    <string name="counter_tile_label">Counter</string>
+    <string name="counter_tile">Counter</string>
     <!--tile label-->
-    <string name="counter_add_tile_label">Add</string>
-    <string name="counter_remove_tile_label">Remove</string>
-    <string name="counter_reset_tile_label">Reset</string>
+    <string name="counter_tile_add">Add</string>
+    <string name="counter_tile_remove">Remove</string>
+    <string name="counter_tile_reset">Reset</string>
 
     <!--screenshot tile-->
 
-    <string name="screenshot_tile_label">Screenshot</string>
+    <string name="screenshot_tile">Screenshot</string>
+
+    <!--sound mode tile-->
+
+    <string name="sound_mode_tile">Sound mode</string>
+    <!--tile label-->
+    <string name="sound_tile_normal">Normal</string>
+    <string name="sound_tile_silent">Silent</string>
+    <string name="sound_tile_vibrate">Vibrate</string>
+
+    <!--caffeine tile-->
+
+    <string name="caffeine_tile">Caffeine</string>
+    <!--tile label-->
+    <string name="caffeine_tile_minutes">%1$d minutes</string>
+    <string name="caffeine_tile_infinite">Infinite</string>
 </resources>
