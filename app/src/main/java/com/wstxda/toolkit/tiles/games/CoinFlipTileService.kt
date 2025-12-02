@@ -9,31 +9,27 @@ import com.wstxda.toolkit.ui.label.CoinFlipLabelProvider
 
 class CoinFlipTileService : BaseTileService() {
 
-    private lateinit var coinFlipLabelProvider: CoinFlipLabelProvider
-    private lateinit var coinFlipIconProvider: CoinFlipIconProvider
-    private var lastFlip: CoinFlipSide? = null
+    private val coinFlipManager by lazy { CoinFlipManager() }
+    private val coinFlipLabelProvider by lazy { CoinFlipLabelProvider(applicationContext) }
+    private val coinFlipIconProvider by lazy { CoinFlipIconProvider(applicationContext) }
 
-    override fun onCreate() {
-        super.onCreate()
-        coinFlipLabelProvider = CoinFlipLabelProvider(this)
-        coinFlipIconProvider = CoinFlipIconProvider(this)
-    }
+    private var lastFlip: CoinFlipSide? = null
 
     override fun onStopListening() {
         super.onStopListening()
         lastFlip = null
-        CoinFlipManager.reset()
+        coinFlipManager.reset()
         updateTile()
     }
 
     override fun onClick() {
-        lastFlip = CoinFlipManager.flip()
+        lastFlip = coinFlipManager.flip()
         updateTile()
     }
 
     override fun updateTile() {
-        val heads = CoinFlipManager.headsCount
-        val tails = CoinFlipManager.tailsCount
+        val heads = coinFlipManager.headsCount
+        val tails = coinFlipManager.tailsCount
 
         setTileState(
             state = if (lastFlip != null) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE,

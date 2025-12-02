@@ -12,46 +12,43 @@ import kotlinx.coroutines.launch
 
 class DiceRollTileService : BaseTileService() {
 
-    private lateinit var diceRollLabelProvider: DiceRollLabelProvider
-    private lateinit var diceRollIconProvider: DiceRollIconProvider
-    private lateinit var haptics: Haptics
+    private val diceRollManager by lazy { DiceRollManager() }
+    private val diceRollLabelProvider by lazy { DiceRollLabelProvider(applicationContext) }
+    private val diceRollIconProvider by lazy { DiceRollIconProvider(applicationContext) }
+    private val diceRollHaptics by lazy { Haptics(applicationContext) }
+
     private var animationJob: Job? = null
     private var currentRoll: Int? = null
     private var isRolling = false
 
-    override fun onCreate() {
-        super.onCreate()
-        diceRollLabelProvider = DiceRollLabelProvider(this)
-        diceRollIconProvider = DiceRollIconProvider(this)
-        haptics = Haptics(this)
-    }
-
     override fun onStopListening() {
         super.onStopListening()
-        animationJob?.cancel()
+        cancelAnimation()
         currentRoll = null
-        isRolling = false
         updateTile()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        cancelAnimation()
+    }
+
+    private fun cancelAnimation() {
         animationJob?.cancel()
+        animationJob = null
+        isRolling = false
     }
 
     override fun onClick() {
         if (isRolling) return
-
         animationJob?.cancel()
         animationJob = serviceScope.launch {
             isRolling = true
-            val finalRoll = DiceRollManager.roll()
+            val finalRoll = diceRollManager.roll()
 
             for (i in 0 until 12) {
-                val roll = DiceRollManager.roll()
-
-                currentRoll = roll
-                haptics.tick()
+                currentRoll = diceRollManager.roll()
+                diceRollHaptics.tick()
                 updateTile()
 
                 delay(60L + (i * 30))
@@ -59,7 +56,7 @@ class DiceRollTileService : BaseTileService() {
 
             currentRoll = finalRoll
             isRolling = false
-            haptics.tick()
+            diceRollHaptics.tick()
             updateTile()
         }
     }

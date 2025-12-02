@@ -16,16 +16,15 @@ import kotlin.math.abs
 
 object CompassManager : SensorEventListener {
 
+    private var appContext: Context? = null
+    private var lastHapticDegrees: Float? = null
+    private var isSensorRegistered = false
+
     private val _isActive = MutableStateFlow(false)
     val isActive = _isActive.asStateFlow()
 
     private val _currentDegrees = MutableStateFlow(0f)
     val currentDegrees = _currentDegrees.asStateFlow()
-
-    private var appContext: Context? = null
-
-    private var lastHapticDegrees: Float? = null
-    private var isSensorRegistered = false
 
     private val sensorManager: SensorManager?
         get() = appContext?.getSystemService()

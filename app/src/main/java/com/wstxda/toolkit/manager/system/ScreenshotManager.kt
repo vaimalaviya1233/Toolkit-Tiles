@@ -3,9 +3,12 @@ package com.wstxda.toolkit.manager.system
 import android.content.Context
 import com.wstxda.toolkit.permissions.PermissionManager
 
-object ScreenshotManager {
+class ScreenshotManager(context: Context) {
 
-    fun isPermissionGranted(context: Context): Boolean {
-        return PermissionManager.isAccessibilityServiceEnabled(context)
+    private val appContext = context.applicationContext
+    private val permissionManager = PermissionManager(appContext)
+
+    fun isPermissionGranted(): Boolean {
+        return permissionManager.isAccessibilityServiceEnabled()
     }
 }

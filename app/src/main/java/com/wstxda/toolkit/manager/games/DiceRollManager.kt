@@ -2,7 +2,7 @@ package com.wstxda.toolkit.manager.games
 
 import kotlin.random.Random
 
-object DiceRollManager {
+class DiceRollManager() {
 
     fun roll(): Int {
         return Random.nextInt(1, 7)

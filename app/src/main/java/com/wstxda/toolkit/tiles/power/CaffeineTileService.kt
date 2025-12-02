@@ -12,33 +12,33 @@ import kotlinx.coroutines.flow.onEach
 
 class CaffeineTileService : BaseTileService() {
 
-    private lateinit var caffeineLabelProvider: CaffeineLabelProvider
-    private lateinit var caffeineIconProvider: CaffeineIconProvider
-
-    override fun onCreate() {
-        super.onCreate()
-        caffeineLabelProvider = CaffeineLabelProvider(this)
-        caffeineIconProvider = CaffeineIconProvider(this)
-    }
+    private val caffeineManager by lazy { CaffeineManager(applicationContext) }
+    private val caffeineLabelProvider by lazy { CaffeineLabelProvider(applicationContext) }
+    private val caffeineIconProvider by lazy { CaffeineIconProvider(applicationContext) }
 
     override fun onStartListening() {
         super.onStartListening()
-        CaffeineManager.synchronizeState(this)
+        caffeineManager.synchronizeState()
 
-        CaffeineManager.currentState.onEach { updateTile() }.launchIn(serviceScope)
+        caffeineManager.currentState.onEach { updateTile() }.launchIn(serviceScope)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        caffeineManager.cleanup()
     }
 
     override fun onClick() {
-        if (CaffeineManager.isPermissionGranted(this)) {
-            CaffeineManager.cycleState(this)
+        if (caffeineManager.isPermissionGranted()) {
+            caffeineManager.cycleState()
         } else {
             startActivityAndCollapse(WriteSettingsPermissionActivity::class.java)
         }
     }
 
     override fun updateTile() {
-        val state = CaffeineManager.currentState.value
-        val hasPermission = CaffeineManager.isPermissionGranted(this)
+        val state = caffeineManager.currentState.value
+        val hasPermission = caffeineManager.isPermissionGranted()
 
         setTileState(
             state = if (state != CaffeineState.Off && hasPermission) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE,

@@ -7,51 +7,52 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
 import android.os.Build
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 
-object SoundModeManager {
+class SoundModeManager(private val context: Context) {
 
-    private lateinit var audioManager: AudioManager
-    private lateinit var notificationManager: NotificationManager
+    private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    private val _currentMode = MutableStateFlow(SoundMode.NORMAL)
-    val currentMode = _currentMode.asStateFlow()
+    val currentModeFlow: Flow<SoundMode> = callbackFlow {
+        trySend(getCurrentModeInternal())
 
-    private val ringerModeReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action == AudioManager.RINGER_MODE_CHANGED_ACTION) {
-                _currentMode.value = getCurrentModeInternal()
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (intent.action == AudioManager.RINGER_MODE_CHANGED_ACTION) {
+                    trySend(getCurrentModeInternal())
+                }
             }
         }
-    }
-
-    fun init(context: Context) {
-        audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        _currentMode.value = getCurrentModeInternal()
 
         context.registerReceiver(
-            ringerModeReceiver,
+            receiver,
             IntentFilter(AudioManager.RINGER_MODE_CHANGED_ACTION),
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 Context.RECEIVER_NOT_EXPORTED
             } else 0
         )
-    }
+
+        awaitClose {
+            try {
+                context.unregisterReceiver(receiver)
+            } catch (_: IllegalArgumentException) {
+            }
+        }
+    }.distinctUntilChanged()
 
     fun hasPermission(): Boolean {
-        return if (::notificationManager.isInitialized) {
-            notificationManager.isNotificationPolicyAccessGranted
-        } else false
+        return notificationManager.isNotificationPolicyAccessGranted
     }
 
     fun cycleMode() {
         if (!hasPermission()) return
 
-        val newMode = when (_currentMode.value) {
+        val current = getCurrentModeInternal()
+        val newMode = when (current) {
             SoundMode.NORMAL -> SoundMode.VIBRATE
             SoundMode.VIBRATE -> SoundMode.SILENT
             SoundMode.SILENT -> SoundMode.NORMAL
@@ -59,19 +60,11 @@ object SoundModeManager {
         audioManager.ringerMode = newMode.ringerMode
     }
 
-    private fun getCurrentModeInternal(): SoundMode {
-        if (!::audioManager.isInitialized) return SoundMode.NORMAL
+    fun getCurrentModeInternal(): SoundMode {
         return when (audioManager.ringerMode) {
             AudioManager.RINGER_MODE_VIBRATE -> SoundMode.VIBRATE
             AudioManager.RINGER_MODE_SILENT -> SoundMode.SILENT
             else -> SoundMode.NORMAL
-        }
-    }
-
-    fun unregisterReceiver(context: Context) {
-        try {
-            context.unregisterReceiver(ringerModeReceiver)
-        } catch (_: IllegalArgumentException) {
         }
     }
 }

@@ -7,20 +7,24 @@ import com.wstxda.toolkit.permissions.PermissionManager
 import com.wstxda.toolkit.services.accessibility.TileAccessibilityAction
 import com.wstxda.toolkit.services.accessibility.TileAccessibilityService
 
-object LockManager {
+class LockManager(context: Context) {
 
-    fun isPermissionGranted(context: Context): Boolean {
-        return PermissionManager.isAccessibilityServiceEnabled(context)
+    private val appContext = context.applicationContext
+    private val permissionManager = PermissionManager(appContext)
+
+    fun isPermissionGranted(): Boolean {
+        return permissionManager.isAccessibilityServiceEnabled()
     }
 
-    fun lockScreen(context: Context) {
-        if (!isPermissionGranted(context)) return
+    fun lockScreen() {
+        if (!isPermissionGranted()) return
 
-        val intent = Intent(context, TileAccessibilityService::class.java).apply {
+        val intent = Intent(appContext, TileAccessibilityService::class.java).apply {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 putExtra(TileAccessibilityService.ACTION_KEY, TileAccessibilityAction.LOCK_SCREEN)
             }
         }
-        context.startService(intent)
+
+        appContext.startService(intent)
     }
 }

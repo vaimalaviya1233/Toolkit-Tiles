@@ -7,7 +7,6 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.view.Display
 import androidx.core.content.getSystemService
-import com.wstxda.toolkit.services.sensors.Mode
 import com.wstxda.toolkit.services.sensors.Orientation
 import com.wstxda.toolkit.services.sensors.getOrientation
 import com.wstxda.toolkit.services.sensors.getTilt
@@ -18,16 +17,16 @@ import kotlin.math.roundToInt
 
 object LevelManager : SensorEventListener {
 
+    private var appContext: Context? = null
+
     private val _isActive = MutableStateFlow(false)
     val isActive = _isActive.asStateFlow()
 
-    private val _orientation = MutableStateFlow(Orientation(0f, 0f, 0f, Mode.Dot))
+    private val _orientation = MutableStateFlow(Orientation(0f, 0f, 0f, LevelMode.Dot))
     val orientation = _orientation.asStateFlow()
 
     private val _degrees = MutableStateFlow(0)
     val degrees = _degrees.asStateFlow()
-
-    private var appContext: Context? = null
 
     private val sensorManager: SensorManager?
         get() = appContext?.getSystemService()
@@ -102,8 +101,8 @@ object LevelManager : SensorEventListener {
         _orientation.value = orient
 
         val deg = when (orient.mode) {
-            Mode.Line -> orient.balance.roundToInt()
-            Mode.Dot -> getTilt(orient.pitch, orient.roll)
+            LevelMode.Line -> orient.balance.roundToInt()
+            LevelMode.Dot -> getTilt(orient.pitch, orient.roll)
         }
 
         _degrees.value = deg

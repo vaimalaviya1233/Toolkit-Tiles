@@ -1,22 +1,27 @@
 package com.wstxda.toolkit.manager.tools
 
 import android.content.Context
+import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import com.wstxda.toolkit.ui.utils.Haptics
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlin.coroutines.coroutineContext
 
 class SosFlasher(context: Context) {
 
+    val hasFlash: Boolean get() = cameraId != null
+
+    private var sosJob: Job? = null
     private val haptics = Haptics(context)
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val unit = 200L
     private val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-
     private val _isTorchOn = MutableStateFlow(false)
-    val isTorchOn = _isTorchOn.asStateFlow()
-
     private val _torchAvailable = MutableStateFlow(true)
+    val isTorchOn = _isTorchOn.asStateFlow()
     val isTorchAvailable = _torchAvailable.asStateFlow()
 
     private val cameraId: String? = try {
@@ -27,12 +32,6 @@ class SosFlasher(context: Context) {
     } catch (_: Exception) {
         null
     }
-
-    val hasFlash: Boolean get() = cameraId != null
-
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-    private var job: Job? = null
-    private val unit = 200L
 
     private val torchCallback = object : CameraManager.TorchCallback() {
         override fun onTorchModeChanged(id: String, enabled: Boolean) {
@@ -51,38 +50,57 @@ class SosFlasher(context: Context) {
 
     init {
         cameraId?.let {
-            cameraManager.registerTorchCallback(torchCallback, null)
+            try {
+                cameraManager.registerTorchCallback(torchCallback, null)
+            } catch (_: Exception) {
+            }
         }
     }
 
-    val isRunning: Boolean get() = job?.isActive == true
-
     fun start() {
-        if (!hasFlash || !_torchAvailable.value || _isTorchOn.value || isRunning) return
-
-        job?.cancel()
-        job = scope.launch {
-            while (isActive) {
-                delay(unit * 2)
-                sendS()
-                delay(unit * 2)
-                sendO()
-                delay(unit * 2)
-                sendS()
-                delay(unit * 4)
+        if (!hasFlash || !_torchAvailable.value || sosJob?.isActive == true) return
+        sosJob?.cancel()
+        sosJob = scope.launch {
+            try {
+                while (isActive) {
+                    delay(unit * 2)
+                    sendS()
+                    delay(unit * 2)
+                    sendO()
+                    delay(unit * 2)
+                    sendS()
+                    delay(unit * 4)
+                }
+            } finally {
+                withContext(NonCancellable) {
+                    setTorch(false)
+                }
             }
         }
     }
 
     fun stop() {
-        job?.cancel()
-        job = null
-        setTorch(false)
+        sosJob?.cancel()
+        sosJob = null
         haptics.cancel()
     }
 
-    private suspend fun sendS() = repeat(3) { dot() }
-    private suspend fun sendO() = repeat(3) { dash() }
+    fun cleanup() {
+        stop()
+        try {
+            cameraManager.unregisterTorchCallback(torchCallback)
+        } catch (_: Exception) {
+        }
+        scope.cancel()
+    }
+
+    private suspend fun sendS() = repeat(3) {
+        if (coroutineContext.isActive) dot()
+    }
+
+    private suspend fun sendO() = repeat(3) {
+        if (coroutineContext.isActive) dash()
+    }
 
     private suspend fun dot() {
         blink(unit)
@@ -95,6 +113,7 @@ class SosFlasher(context: Context) {
     }
 
     private suspend fun blink(duration: Long) {
+        if (!coroutineContext.isActive) return
         setTorch(true)
         haptics.long(duration)
         delay(duration)
@@ -102,10 +121,12 @@ class SosFlasher(context: Context) {
     }
 
     private fun setTorch(enabled: Boolean) {
+        val id = cameraId ?: return
         try {
-            cameraId?.let { cameraManager.setTorchMode(it, enabled) }
-        } catch (_: Exception) {
+            cameraManager.setTorchMode(id, enabled)
+        } catch (_: CameraAccessException) {
             _torchAvailable.value = false
+        } catch (_: Exception) {
         }
     }
 }

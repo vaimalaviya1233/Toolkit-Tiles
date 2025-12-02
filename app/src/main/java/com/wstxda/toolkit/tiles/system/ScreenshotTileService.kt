@@ -10,14 +10,9 @@ import com.wstxda.toolkit.ui.label.ScreenshotLabelProvider
 
 class ScreenshotTileService : BaseTileService() {
 
-    private lateinit var screenshotLabelProvider: ScreenshotLabelProvider
-    private lateinit var screenshotIconProvider: ScreenshotIconProvider
-
-    override fun onCreate() {
-        super.onCreate()
-        screenshotLabelProvider = ScreenshotLabelProvider(this)
-        screenshotIconProvider = ScreenshotIconProvider(this)
-    }
+    private val screenshotManager by lazy { ScreenshotManager(applicationContext) }
+    private val screenshotLabelProvider by lazy { ScreenshotLabelProvider(applicationContext) }
+    private val screenshotIconProvider by lazy { ScreenshotIconProvider(applicationContext) }
 
     override fun onStartListening() {
         super.onStartListening()
@@ -25,7 +20,7 @@ class ScreenshotTileService : BaseTileService() {
     }
 
     override fun onClick() {
-        if (ScreenshotManager.isPermissionGranted(this)) {
+        if (screenshotManager.isPermissionGranted()) {
             startActivityAndCollapse(ScreenshotActivity::class.java)
         } else {
             startActivityAndCollapse(AccessibilityPermissionActivity::class.java)
@@ -33,7 +28,7 @@ class ScreenshotTileService : BaseTileService() {
     }
 
     override fun updateTile() {
-        val hasPermission = ScreenshotManager.isPermissionGranted(this)
+        val hasPermission = screenshotManager.isPermissionGranted()
 
         setTileState(
             state = Tile.STATE_INACTIVE,

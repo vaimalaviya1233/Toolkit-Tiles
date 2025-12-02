@@ -10,14 +10,13 @@ import com.wstxda.toolkit.R
 @SuppressLint("AccessibilityPolicy")
 class TileAccessibilityService : AccessibilityService() {
 
+    companion object {
+        const val ACTION_KEY = "com.wstxda.toolkit.ACTION_KEY"
+    }
+
     override fun onAccessibilityEvent(event: AccessibilityEvent?) = Unit
 
     override fun onInterrupt() = Unit
-
-    companion object {
-        const val ACTION_KEY = "com.wstxda.toolkit.ACTION_KEY"
-
-    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val action = intent?.getIntExtra(ACTION_KEY, -1) ?: -1

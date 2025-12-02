@@ -36,6 +36,8 @@ private fun getOrientation(rotationMatrix: FloatArray, rotation: Int): FloatArra
         Surface.ROTATION_270 -> SensorManager.remapCoordinateSystem(
             rotationMatrix, SensorManager.AXIS_MINUS_Y, axisX, remappedRotationMatrix
         )
+
+        else -> System.arraycopy(rotationMatrix, 0, remappedRotationMatrix, 0, 9)
     }
 
     val orientation = FloatArray(3)

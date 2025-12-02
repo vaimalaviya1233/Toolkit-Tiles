@@ -6,13 +6,15 @@ import android.provider.Settings
 import android.text.TextUtils
 import com.wstxda.toolkit.services.accessibility.TileAccessibilityService
 
-object PermissionManager {
+class PermissionManager(context: Context) {
 
-    fun isAccessibilityServiceEnabled(context: Context): Boolean {
-        val expectedComponentName = ComponentName(context, TileAccessibilityService::class.java)
+    private val appContext = context.applicationContext
+
+    fun isAccessibilityServiceEnabled(): Boolean {
+        val expectedComponentName = ComponentName(appContext, TileAccessibilityService::class.java)
 
         val enabledServicesSetting = Settings.Secure.getString(
-            context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+            appContext.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
         ) ?: return false
 
         val colonSplitter = TextUtils.SimpleStringSplitter(':')

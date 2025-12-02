@@ -3,17 +3,12 @@ package com.wstxda.toolkit.services.sensors
 import android.hardware.SensorEvent
 import android.hardware.SensorManager
 import android.view.Surface
+import com.wstxda.toolkit.manager.sensors.LevelMode
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
-
-enum class Mode { Line, Dot }
-
-data class Orientation(
-    val pitch: Float, val roll: Float, val balance: Float, val mode: Mode
-)
 
 fun getOrientation(event: SensorEvent, displayRotation: Int): Orientation {
     val rotationMatrix = FloatArray(16)
@@ -27,7 +22,7 @@ fun getOrientation(event: SensorEvent, displayRotation: Int): Orientation {
     val pitch = Math.toDegrees(orientation[1].toDouble()).toFloat()
     val roll = Math.toDegrees(orientation[2].toDouble()).toFloat()
 
-    val mode = if (abs(pitch) > 45f || abs(roll) > 45f) Mode.Line else Mode.Dot
+    val mode = if (abs(pitch) > 45f || abs(roll) > 45f) LevelMode.Line else LevelMode.Dot
 
     val gx = remapped.getOrNull(8) ?: 0f
     val gy = remapped.getOrNull(9) ?: 0f

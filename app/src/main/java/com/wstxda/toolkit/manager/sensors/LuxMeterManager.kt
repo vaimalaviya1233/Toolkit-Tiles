@@ -12,15 +12,15 @@ import kotlinx.coroutines.flow.asStateFlow
 
 object LuxMeterManager : SensorEventListener {
 
+    private var sensorManager: SensorManager? = null
+    private var lightSensor: Sensor? = null
+    private var isSensorRegistered = false
+
     private val _isActive = MutableStateFlow(false)
     val isActive = _isActive.asStateFlow()
 
     private val _lux = MutableStateFlow(0)
     val lux = _lux.asStateFlow()
-
-    private var sensorManager: SensorManager? = null
-    private var lightSensor: Sensor? = null
-    private var isSensorRegistered = false
 
     fun initialize(context: Context) {
         if (sensorManager != null) return

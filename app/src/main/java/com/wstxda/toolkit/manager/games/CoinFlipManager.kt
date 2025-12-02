@@ -2,7 +2,7 @@ package com.wstxda.toolkit.manager.games
 
 import kotlin.random.Random
 
-object CoinFlipManager {
+class CoinFlipManager() {
 
     var headsCount = 0
         private set

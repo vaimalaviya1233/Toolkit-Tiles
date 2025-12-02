@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.withSave
 import com.wstxda.toolkit.R
-import com.wstxda.toolkit.services.sensors.Mode
+import com.wstxda.toolkit.manager.sensors.LevelMode
 import com.wstxda.toolkit.services.sensors.Orientation
 import kotlin.math.max
 
@@ -32,13 +32,13 @@ class LevelIconProvider(private val context: Context) {
 
         if (degrees == 0) {
             val resId =
-                if (orient.mode == Mode.Line) R.drawable.ic_level_line_zero else R.drawable.ic_level_dot_zero
+                if (orient.mode == LevelMode.Line) R.drawable.ic_level_line_zero else R.drawable.ic_level_dot_zero
             return Icon.createWithResource(context, resId)
         }
 
         return when (orient.mode) {
-            Mode.Dot -> buildDot(orient.pitch, orient.roll)
-            Mode.Line -> buildLine(orient.balance)
+            LevelMode.Dot -> buildDot(orient.pitch, orient.roll)
+            LevelMode.Line -> buildLine(orient.balance)
         }
     }
 

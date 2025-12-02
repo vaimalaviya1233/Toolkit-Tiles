@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
 import android.service.quicksettings.TileService
+import androidx.annotation.CallSuper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -14,11 +15,13 @@ abstract class BaseTileService : TileService() {
 
     protected val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
+    @CallSuper
     override fun onStartListening() {
         super.onStartListening()
         updateTile()
     }
 
+    @CallSuper
     override fun onDestroy() {
         super.onDestroy()
         serviceScope.cancel()

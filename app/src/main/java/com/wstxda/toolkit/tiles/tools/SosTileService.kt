@@ -13,37 +13,35 @@ import kotlinx.coroutines.flow.onEach
 
 class SosTileService : BaseTileService() {
 
-    private lateinit var sosLabelProvider: SosLabelProvider
-    private lateinit var sosIconProvider: SosIconProvider
-    private lateinit var sosHaptics: Haptics
-
-    override fun onCreate() {
-        super.onCreate()
-        SosManager.init(this)
-        sosLabelProvider = SosLabelProvider(this)
-        sosIconProvider = SosIconProvider(this)
-        sosHaptics = Haptics(this)
-    }
+    private val sosManager by lazy { SosManager(applicationContext) }
+    private val sosLabelProvider by lazy { SosLabelProvider(applicationContext) }
+    private val sosIconProvider by lazy { SosIconProvider(applicationContext) }
+    private val sosHaptics by lazy { Haptics(applicationContext) }
 
     override fun onStartListening() {
         super.onStartListening()
-        SosManager.isActive.onEach { updateTile() }.launchIn(serviceScope)
+        sosManager.isActive.onEach { updateTile() }.launchIn(serviceScope)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sosManager.cleanup()
     }
 
     override fun onClick() {
         sosHaptics.tick()
 
-        if (!SosManager.hasFlash()) {
+        if (!sosManager.hasFlash()) {
             Toast.makeText(this, getString(R.string.not_supported), Toast.LENGTH_SHORT).show()
             return
         }
 
-        SosManager.toggle()
+        sosManager.toggle()
     }
 
     override fun updateTile() {
-        val active = SosManager.isActive.value
-        val available = SosManager.hasFlash()
+        val active = sosManager.isActive.value
+        val available = sosManager.hasFlash()
 
         setTileState(
             state = when {

@@ -12,12 +12,19 @@ import com.wstxda.toolkit.tiles.power.CaffeineTileService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-object CaffeineManager {
+class CaffeineManager(context: Context) {
 
-    private const val PREF_NAME = "caffeine_prefs"
-    private const val PREF_KEY_ORIGINAL = "original_timeout"
-    private const val PREF_KEY_EXPECTED = "expected_timeout"
-    private const val DEFAULT_TIMEOUT = 60000
+    companion object {
+        private const val PREF_NAME = "caffeine_prefs"
+        private const val PREF_KEY_ORIGINAL = "original_timeout"
+        private const val PREF_KEY_EXPECTED = "expected_timeout"
+        private const val DEFAULT_TIMEOUT = 60000
+    }
+
+    private val appContext = context.applicationContext
+    private val _currentState = MutableStateFlow<CaffeineState>(CaffeineState.Off)
+    val currentState = _currentState.asStateFlow()
+    private var isReceiverRegistered = false
 
     private val stateCycle = listOf(
         CaffeineState.Off,
@@ -28,121 +35,127 @@ object CaffeineManager {
         CaffeineState.Infinite
     )
 
-    private val _currentState = MutableStateFlow<CaffeineState>(CaffeineState.Off)
-    val currentState = _currentState.asStateFlow()
-
-    private var isReceiverRegistered = false
     private val screenOffReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action == Intent.ACTION_SCREEN_OFF) {
-                forceReset(context)
+                restoreOriginalTimeout()
             }
         }
     }
 
-    fun synchronizeState(context: Context) {
-        val prefs = getPrefs(context)
+    fun synchronizeState() {
+        val prefs = getPrefs()
         val expectedTimeout = prefs.getInt(PREF_KEY_EXPECTED, -1)
 
         if (expectedTimeout != -1) {
-            val systemTimeout = getSystemTimeout(context)
+            val systemTimeout = getSystemTimeout()
+
             if (systemTimeout != expectedTimeout) {
-                forceReset(context)
+                forceReset()
             } else {
                 val restoredState =
                     stateCycle.find { it.timeout == expectedTimeout } ?: CaffeineState.Off
                 _currentState.value = restoredState
-                toggleReceiver(context, true)
+                toggleReceiver(true)
             }
         } else {
             _currentState.value = CaffeineState.Off
-            toggleReceiver(context, false)
+            toggleReceiver(false)
         }
     }
 
-    fun isPermissionGranted(context: Context): Boolean {
-        return Settings.System.canWrite(context)
+    fun isPermissionGranted(): Boolean {
+        return Settings.System.canWrite(appContext)
     }
 
-    fun cycleState(context: Context) {
-        if (!isPermissionGranted(context)) return
+    fun cycleState() {
+        if (!isPermissionGranted()) return
 
         val currentIndex = stateCycle.indexOf(_currentState.value)
         val nextIndex = (currentIndex + 1) % stateCycle.size
         val nextState = stateCycle[nextIndex]
 
-        applyState(context, nextState)
+        applyState(nextState)
     }
 
-    private fun applyState(context: Context, newState: CaffeineState) {
+    fun cleanup() {
+        try {
+            if (isReceiverRegistered) {
+                appContext.unregisterReceiver(screenOffReceiver)
+                isReceiverRegistered = false
+            }
+        } catch (_: IllegalArgumentException) {
+        }
+    }
+
+    private fun applyState(newState: CaffeineState) {
         if (newState == CaffeineState.Off) {
-            restoreOriginalTimeout(context)
+            restoreOriginalTimeout()
         } else {
             if (_currentState.value == CaffeineState.Off) {
-                saveOriginalTimeout(context)
+                saveOriginalTimeout()
             }
-
-            if (setSystemTimeout(context, newState.timeout)) {
+            if (setSystemTimeout(newState.timeout)) {
                 _currentState.value = newState
-                getPrefs(context).edit { putInt(PREF_KEY_EXPECTED, newState.timeout) }
-                toggleReceiver(context, true)
+                getPrefs().edit { putInt(PREF_KEY_EXPECTED, newState.timeout) }
+                toggleReceiver(true)
             } else {
-                forceReset(context)
+                forceReset()
             }
         }
-        requestTileUpdate(context)
+        requestTileUpdate()
     }
 
-    private fun saveOriginalTimeout(context: Context) {
-        val current = getSystemTimeout(context)
+    private fun saveOriginalTimeout() {
+        val current = getSystemTimeout()
         if (stateCycle.any { it.timeout == current && it != CaffeineState.Off }) {
             return
         }
-        getPrefs(context).edit { putInt(PREF_KEY_ORIGINAL, current) }
+        getPrefs().edit { putInt(PREF_KEY_ORIGINAL, current) }
     }
 
-    private fun restoreOriginalTimeout(context: Context) {
-        val original = getPrefs(context).getInt(PREF_KEY_ORIGINAL, DEFAULT_TIMEOUT)
-        setSystemTimeout(context, original)
-        forceReset(context)
+    private fun restoreOriginalTimeout() {
+        val original = getPrefs().getInt(PREF_KEY_ORIGINAL, DEFAULT_TIMEOUT)
+        setSystemTimeout(original)
+        forceReset()
     }
 
-    private fun forceReset(context: Context) {
+    private fun forceReset() {
         _currentState.value = CaffeineState.Off
-        getPrefs(context).edit {
+        getPrefs().edit {
             remove(PREF_KEY_EXPECTED)
         }
-        toggleReceiver(context, false)
-        requestTileUpdate(context)
+        toggleReceiver(false)
+        requestTileUpdate()
     }
 
-    private fun toggleReceiver(context: Context, enable: Boolean) {
+    private fun toggleReceiver(enable: Boolean) {
         if (enable && !isReceiverRegistered) {
-            context.applicationContext.registerReceiver(
+            appContext.registerReceiver(
                 screenOffReceiver, IntentFilter(Intent.ACTION_SCREEN_OFF)
             )
             isReceiverRegistered = true
         } else if (!enable && isReceiverRegistered) {
             try {
-                context.applicationContext.unregisterReceiver(screenOffReceiver)
-            } catch (_: Exception) {
+                appContext.unregisterReceiver(screenOffReceiver)
+            } catch (_: IllegalArgumentException) {
             }
             isReceiverRegistered = false
         }
     }
 
-    private fun getSystemTimeout(context: Context): Int {
+    private fun getSystemTimeout(): Int {
         return try {
-            Settings.System.getInt(context.contentResolver, Settings.System.SCREEN_OFF_TIMEOUT)
+            Settings.System.getInt(appContext.contentResolver, Settings.System.SCREEN_OFF_TIMEOUT)
         } catch (_: Exception) {
             DEFAULT_TIMEOUT
         }
     }
 
-    private fun setSystemTimeout(context: Context, timeout: Int): Boolean {
+    private fun setSystemTimeout(timeout: Int): Boolean {
         return try {
             Settings.System.putInt(
-                context.contentResolver, Settings.System.SCREEN_OFF_TIMEOUT, timeout
+                appContext.contentResolver, Settings.System.SCREEN_OFF_TIMEOUT, timeout
             )
             true
         } catch (_: Exception) {
@@ -150,12 +163,11 @@ object CaffeineManager {
         }
     }
 
-    private fun requestTileUpdate(context: Context) {
+    private fun requestTileUpdate() {
         TileService.requestListeningState(
-            context, ComponentName(context, CaffeineTileService::class.java)
+            appContext, ComponentName(appContext, CaffeineTileService::class.java)
         )
     }
 
-    private fun getPrefs(context: Context) =
-        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+    private fun getPrefs() = appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 }

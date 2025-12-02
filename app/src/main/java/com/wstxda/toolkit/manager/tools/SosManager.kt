@@ -3,23 +3,32 @@ package com.wstxda.toolkit.manager.tools
 import android.content.Context
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 
-object SosManager {
+class SosManager(context: Context) {
 
-    private var flasher: SosFlasher? = null
-
+    private val flasher = SosFlasher(context)
+    private val managerScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val _isActive = MutableStateFlow(false)
     val isActive = _isActive.asStateFlow()
 
-    fun init(context: Context) {
-        if (flasher == null) {
-            flasher = SosFlasher(context)
+    init {
+        managerScope.launch {
+            flasher.isTorchAvailable.collectLatest { available ->
+                if (!available && _isActive.value) {
+                    stop()
+                }
+            }
         }
     }
 
     fun hasFlash(): Boolean {
-        val f = flasher ?: return false
-        return f.hasFlash && f.isTorchAvailable.value && !f.isTorchOn.value
+        return flasher.hasFlash && flasher.isTorchAvailable.value
     }
 
     fun toggle() {
@@ -28,12 +37,18 @@ object SosManager {
 
     private fun start() {
         if (!hasFlash()) return
-        flasher?.start()
         _isActive.value = true
+        flasher.start()
     }
 
     private fun stop() {
-        flasher?.stop()
         _isActive.value = false
+        flasher.stop()
+    }
+
+    fun cleanup() {
+        stop()
+        flasher.cleanup()
+        managerScope.cancel()
     }
 }

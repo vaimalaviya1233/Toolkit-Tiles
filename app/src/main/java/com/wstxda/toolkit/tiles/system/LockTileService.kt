@@ -9,14 +9,9 @@ import com.wstxda.toolkit.ui.label.LockLabelProvider
 
 class LockTileService : BaseTileService() {
 
-    private lateinit var labelProvider: LockLabelProvider
-    private lateinit var iconProvider: LockIconProvider
-
-    override fun onCreate() {
-        super.onCreate()
-        labelProvider = LockLabelProvider(this)
-        iconProvider = LockIconProvider(this)
-    }
+    private val lockManager by lazy { LockManager(applicationContext) }
+    private val lockLabelProvider by lazy { LockLabelProvider(applicationContext) }
+    private val lockIconProvider by lazy { LockIconProvider(applicationContext) }
 
     override fun onStartListening() {
         super.onStartListening()
@@ -24,21 +19,21 @@ class LockTileService : BaseTileService() {
     }
 
     override fun onClick() {
-        if (LockManager.isPermissionGranted(this)) {
-            LockManager.lockScreen(this)
+        if (lockManager.isPermissionGranted()) {
+            lockManager.lockScreen()
         } else {
             startActivityAndCollapse(AccessibilityPermissionActivity::class.java)
         }
     }
 
     override fun updateTile() {
-        val hasPermission = LockManager.isPermissionGranted(this)
+        val hasPermission = lockManager.isPermissionGranted()
 
         setTileState(
             state = Tile.STATE_INACTIVE,
-            label = labelProvider.getLabel(),
-            subtitle = labelProvider.getSubtitle(hasPermission),
-            icon = iconProvider.getIcon()
+            label = lockLabelProvider.getLabel(),
+            subtitle = lockLabelProvider.getSubtitle(hasPermission),
+            icon = lockIconProvider.getIcon()
         )
     }
 }
