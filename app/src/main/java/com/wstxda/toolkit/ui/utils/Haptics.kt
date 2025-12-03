@@ -23,8 +23,8 @@ class Haptics(private val context: Context) {
         perform(getEffectTick())
     }
 
-    fun long(duration: Long) {
-        performOneShot(duration)
+    fun long(duration: Long, force: Boolean = false) {
+        performOneShot(duration, force)
     }
 
     fun cancel() {
@@ -32,38 +32,36 @@ class Haptics(private val context: Context) {
     }
 
     private fun perform(effectId: Int) {
-        if (!isAllowed()) return
+        if (!isAllowed(force = false)) return
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val effect = VibrationEffect.createPredefined(effectId)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 val attrs =
-                    VibrationAttributes.Builder().setUsage(VibrationAttributes.USAGE_ALARM).build()
-
+                    VibrationAttributes.Builder().setUsage(VibrationAttributes.USAGE_TOUCH).build()
                 vibrator.vibrate(effect, attrs)
             } else {
                 @Suppress("DEPRECATION") vibrator.vibrate(effect)
             }
-
         } else {
-            val effect = VibrationEffect.createOneShot(
-                12, VibrationEffect.DEFAULT_AMPLITUDE
-            )
+            val effect = VibrationEffect.createOneShot(12, VibrationEffect.DEFAULT_AMPLITUDE)
             @Suppress("DEPRECATION") vibrator.vibrate(effect)
         }
     }
 
-    private fun performOneShot(duration: Long) {
-        if (!isAllowed()) return
+    private fun performOneShot(duration: Long, force: Boolean) {
+        if (!isAllowed(force)) return
 
         val effect = VibrationEffect.createOneShot(
             duration, VibrationEffect.DEFAULT_AMPLITUDE
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val attrs =
-                VibrationAttributes.Builder().setUsage(VibrationAttributes.USAGE_ALARM).build()
+            val usage =
+                if (force) VibrationAttributes.USAGE_ALARM else VibrationAttributes.USAGE_TOUCH
+
+            val attrs = VibrationAttributes.Builder().setUsage(usage).build()
             vibrator.vibrate(effect, attrs)
         } else {
             @Suppress("DEPRECATION") vibrator.vibrate(effect)
@@ -74,9 +72,9 @@ class Haptics(private val context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) VibrationEffect.EFFECT_TICK
         else 2
 
-    private fun isAllowed(): Boolean {
+    private fun isAllowed(force: Boolean): Boolean {
         if (!vibrator.hasVibrator()) return false
-
+        if (force) return true
 
         val am = context.getSystemService(AudioManager::class.java)
         if (am.ringerMode == AudioManager.RINGER_MODE_SILENT) return false

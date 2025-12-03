@@ -134,7 +134,7 @@ class SosFlasher(context: Context) {
     private suspend fun blink(duration: Long) {
         if (!coroutineContext.isActive) return
         setTorch(true)
-        haptics.long(duration)
+        haptics.long(duration, force = true)
         delay(duration)
         setTorch(false)
     }
