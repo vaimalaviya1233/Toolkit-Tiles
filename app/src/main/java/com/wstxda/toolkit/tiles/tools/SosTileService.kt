@@ -25,6 +25,9 @@ class SosTileService : BaseTileService() {
             Toast.makeText(this, getString(R.string.not_supported), Toast.LENGTH_SHORT).show()
             return
         }
+
+        if (qsTile?.state == Tile.STATE_UNAVAILABLE) return
+
         sosManager.toggle()
     }
 

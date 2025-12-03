@@ -33,6 +33,7 @@ class SosFlasher(context: Context) {
     private val _isTorchOn = MutableStateFlow(false)
     private val _torchAvailable = MutableStateFlow(true)
 
+    val isTorchOn = _isTorchOn.asStateFlow()
     val isTorchAvailable = _torchAvailable.asStateFlow()
 
     private var sosJob: Job? = null

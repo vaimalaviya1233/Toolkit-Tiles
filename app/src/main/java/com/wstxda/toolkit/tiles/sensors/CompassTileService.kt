@@ -24,7 +24,6 @@ private val CAN_ONLY_START_FOREGROUND_ON_CLICK =
 class CompassTileService : BaseTileService() {
 
     private val compassModule by lazy { CompassModule.getInstance(applicationContext) }
-
     private val compassLabelProvider by lazy { CompassLabelProvider(applicationContext) }
     private val compassIconProvider by lazy { CompassIconProvider(applicationContext) }
 

@@ -6,8 +6,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SosManager(context: Context) {
@@ -18,7 +22,19 @@ class SosManager(context: Context) {
     private val _isActive = MutableStateFlow(false)
     val isActive = _isActive.asStateFlow()
 
-    val isFlashAvailable = flasher.isTorchAvailable
+    val isFlashAvailable: StateFlow<Boolean> = combine(
+        flasher.isTorchAvailable, flasher.isTorchOn, _isActive
+    ) { available, isOn, active ->
+        if (active) {
+            available
+        } else {
+            available && !isOn
+        }
+    }.stateIn(
+        scope = managerScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = flasher.isTorchAvailable.value
+    )
 
     init {
         managerScope.launch {
@@ -34,6 +50,8 @@ class SosManager(context: Context) {
 
     fun toggle() {
         if (!hasFlashHardware()) return
+
+        if (!_isActive.value && !isFlashAvailable.value) return
 
         if (_isActive.value) {
             stopInternal()
