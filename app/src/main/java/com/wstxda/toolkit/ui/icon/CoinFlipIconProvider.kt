@@ -3,7 +3,7 @@ package com.wstxda.toolkit.ui.icon
 import android.content.Context
 import android.graphics.drawable.Icon
 import com.wstxda.toolkit.R
-import com.wstxda.toolkit.manager.games.CoinFlipSide
+import com.wstxda.toolkit.manager.coinflip.CoinFlipSide
 
 class CoinFlipIconProvider(private val context: Context) {
 

@@ -3,7 +3,7 @@ package com.wstxda.toolkit.ui.icon
 import android.content.Context
 import android.graphics.drawable.Icon
 import com.wstxda.toolkit.R
-import com.wstxda.toolkit.manager.audio.SoundMode
+import com.wstxda.toolkit.manager.soundmode.SoundMode
 
 class SoundModeIconProvider(private val context: Context) {
 

@@ -2,7 +2,7 @@ package com.wstxda.toolkit.ui.label
 
 import android.content.Context
 import com.wstxda.toolkit.R
-import com.wstxda.toolkit.manager.games.CoinFlipSide
+import com.wstxda.toolkit.manager.coinflip.CoinFlipSide
 
 class CoinFlipLabelProvider(private val context: Context) {
 

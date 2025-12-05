@@ -2,7 +2,7 @@ package com.wstxda.toolkit.ui.label
 
 import android.content.Context
 import com.wstxda.toolkit.R
-import com.wstxda.toolkit.manager.power.CaffeineState
+import com.wstxda.toolkit.manager.caffeine.CaffeineState
 import java.util.concurrent.TimeUnit
 
 class CaffeineLabelProvider(private val context: Context) {

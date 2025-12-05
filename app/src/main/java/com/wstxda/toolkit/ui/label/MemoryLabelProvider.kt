@@ -2,7 +2,7 @@ package com.wstxda.toolkit.ui.label
 
 import android.content.Context
 import com.wstxda.toolkit.R
-import com.wstxda.toolkit.manager.system.MemoryState
+import com.wstxda.toolkit.manager.memory.MemoryState
 
 class MemoryLabelProvider(private val context: Context) {
 

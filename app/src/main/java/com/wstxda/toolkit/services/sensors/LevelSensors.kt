@@ -3,7 +3,7 @@ package com.wstxda.toolkit.services.sensors
 import android.hardware.SensorEvent
 import android.hardware.SensorManager
 import android.view.Surface
-import com.wstxda.toolkit.manager.sensors.LevelMode
+import com.wstxda.toolkit.manager.level.LevelMode
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.pow

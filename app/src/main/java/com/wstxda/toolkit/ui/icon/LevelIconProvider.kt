@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.withSave
 import com.wstxda.toolkit.R
-import com.wstxda.toolkit.manager.sensors.LevelMode
+import com.wstxda.toolkit.manager.level.LevelMode
 import com.wstxda.toolkit.services.sensors.Orientation
 import kotlin.math.max
 

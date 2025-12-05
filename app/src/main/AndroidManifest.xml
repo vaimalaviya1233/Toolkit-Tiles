@@ -82,7 +82,7 @@
         <!--caffeine quick settings tile service-->
 
         <service
-            android:name=".tiles.power.CaffeineTileService"
+            android:name=".tiles.caffeine.CaffeineTileService"
             android:exported="true"
             android:icon="@drawable/ic_caffeine"
             android:label="@string/caffeine_tile"
@@ -98,7 +98,7 @@
         <!--coin flip quick settings tile service-->
 
         <service
-            android:name=".tiles.games.CoinFlipTileService"
+            android:name=".tiles.coinflip.CoinFlipTileService"
             android:exported="true"
             android:icon="@drawable/ic_coin"
             android:label="@string/coin_flip_tile"
@@ -114,7 +114,7 @@
         <!--compass quick settings tile service-->
 
         <service
-            android:name=".tiles.sensors.CompassTileService"
+            android:name=".tiles.compass.CompassTileService"
             android:exported="true"
             android:foregroundServiceType="specialUse"
             android:icon="@drawable/ic_compass_off"
@@ -178,7 +178,7 @@
         <!--dice roll quick settings tile service-->
 
         <service
-            android:name=".tiles.games.DiceRollTileService"
+            android:name=".tiles.diceroll.DiceRollTileService"
             android:exported="true"
             android:icon="@drawable/ic_dice"
             android:label="@string/dice_roll_tile"
@@ -194,7 +194,7 @@
         <!--bubble level quick settings tile service-->
 
         <service
-            android:name=".tiles.sensors.LevelTileService"
+            android:name=".tiles.level.LevelTileService"
             android:exported="true"
             android:foregroundServiceType="specialUse"
             android:icon="@drawable/ic_level"
@@ -214,7 +214,7 @@
         <!--lock screen quick settings tile service-->
 
         <service
-            android:name=".tiles.system.LockTileService"
+            android:name=".tiles.lock.LockTileService"
             android:enabled="@bool/enable_lock_tile"
             android:exported="true"
             android:icon="@drawable/ic_lock"
@@ -231,7 +231,7 @@
         <!--lux meter quick settings tile service-->
 
         <service
-            android:name=".tiles.sensors.LuxMeterTileService"
+            android:name=".tiles.luxmeter.LuxMeterTileService"
             android:exported="true"
             android:foregroundServiceType="specialUse"
             android:icon="@drawable/ic_lux_meter_off"
@@ -251,7 +251,7 @@
         <!--device memory quick settings tile service-->
 
         <service
-            android:name=".tiles.system.MemoryTileService"
+            android:name=".tiles.memory.MemoryTileService"
             android:exported="true"
             android:icon="@drawable/ic_memory"
             android:label="@string/memory_tile"
@@ -267,7 +267,7 @@
         <!--screenshot quick settings tile service-->
 
         <service
-            android:name=".tiles.system.ScreenshotTileService"
+            android:name=".tiles.screenshot.ScreenshotTileService"
             android:enabled="@bool/enable_screenshot_tile"
             android:exported="true"
             android:icon="@drawable/ic_screenshot"
@@ -284,7 +284,7 @@
         <!--sos quick settings tile service-->
 
         <service
-            android:name=".tiles.tools.SosTileService"
+            android:name=".tiles.sos.SosTileService"
             android:exported="true"
             android:icon="@drawable/ic_sos"
             android:label="@string/sos_tile"
@@ -300,7 +300,7 @@
         <!--sound mode quick settings tile service-->
 
         <service
-            android:name=".tiles.audio.SoundModeTileService"
+            android:name=".tiles.soundmode.SoundModeTileService"
             android:exported="true"
             android:icon="@drawable/ic_sound"
             android:label="@string/sound_mode_tile"

@@ -3,7 +3,7 @@ package com.wstxda.toolkit.ui.icon
 import android.content.Context
 import android.graphics.drawable.Icon
 import com.wstxda.toolkit.R
-import com.wstxda.toolkit.manager.power.CaffeineState
+import com.wstxda.toolkit.manager.caffeine.CaffeineState
 
 class CaffeineIconProvider(private val context: Context) {
 
