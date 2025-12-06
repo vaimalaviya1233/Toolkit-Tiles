@@ -11,13 +11,13 @@ class MemoryLabelProvider(private val context: Context) {
             MemoryState.DISABLED -> context.getString(R.string.memory_tile)
 
             MemoryState.RAM -> {
-                if (detail.isBlank()) return context.getString(R.string.memory_empty)
-                context.getString(R.string.memory_ram, detail)
+                if (detail.isBlank()) return context.getString(R.string.memory_tile_empty)
+                context.getString(R.string.memory_tile_ram, detail)
             }
 
             MemoryState.STORAGE -> {
-                if (detail.isBlank()) return context.getString(R.string.memory_empty)
-                context.getString(R.string.memory_storage, detail)
+                if (detail.isBlank()) return context.getString(R.string.memory_tile_empty)
+                context.getString(R.string.memory_tile_storage, detail)
             }
         }
     }
@@ -28,7 +28,7 @@ class MemoryLabelProvider(private val context: Context) {
 
             MemoryState.RAM, MemoryState.STORAGE -> {
                 if (used.isBlank() || total.isBlank()) return null
-                context.getString(R.string.memory_format, used, total)
+                context.getString(R.string.memory_tile_format, used, total)
             }
         }
     }
