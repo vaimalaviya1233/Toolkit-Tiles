@@ -50,6 +50,12 @@ class CaffeineManager(context: Context) {
         }
     }
 
+    private val settingsObserver = object : android.database.ContentObserver(null) {
+        override fun onChange(selfChange: Boolean) {
+            synchronizeState()
+        }
+    }
+
     fun synchronizeState() {
         managerScope.launch {
             val prefs = getPrefs()
@@ -138,10 +144,16 @@ class CaffeineManager(context: Context) {
             appContext.registerReceiver(
                 screenOffReceiver, IntentFilter(Intent.ACTION_SCREEN_OFF)
             )
+            appContext.contentResolver.registerContentObserver(
+                Settings.System.getUriFor(Settings.System.SCREEN_OFF_TIMEOUT),
+                false,
+                settingsObserver
+            )
             isReceiverRegistered = true
         } else if (!enable && isReceiverRegistered) {
             try {
                 appContext.unregisterReceiver(screenOffReceiver)
+                appContext.contentResolver.unregisterContentObserver(settingsObserver)
             } catch (_: IllegalArgumentException) {
             }
             isReceiverRegistered = false
