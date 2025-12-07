@@ -13,8 +13,6 @@ android {
         targetSdk = 36
         versionCode = 100
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -50,4 +48,6 @@ android {
 
 dependencies {
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.fragment)
+    implementation(libs.google.material)
 }

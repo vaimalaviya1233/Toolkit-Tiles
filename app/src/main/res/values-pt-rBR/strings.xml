@@ -1,5 +1,26 @@
 <resources>
 
+    <!--app about section -->
+
+    <string name="about_description">Tiles simples e leves que oferecem acesso instantâneo a recursos úteis, sem precisar de apps extras.</string>
+    <string name="about_version">Versão: %s</string>
+    <!--links-->
+    <string name="about_developer">Desenvolvedor</string>
+
+    <string name="about_repository">Repositório com o código fonte</string>
+
+    <string name="about_contributors">Contribuidores</string>
+    <string name="about_contributors_summary">Pessoas que contribuíram com o projeto</string>
+
+    <!--update checker-->
+
+    <string name="update_checker_download_button">Baixar</string>
+    <!--updater messages-->
+    <string name="update_checker_no_update">Nenhuma atualização disponível</string>
+    <string name="update_checker_update_available">Nova atualização disponível: %s</string>
+    <string name="update_checker_no_internet">Sem conexão com a internet</string>
+    <string name="update_checker_generic_error">Algo deu errado… Tente novamente mais tarde</string>
+
     <!--notification service-->
 
     <string name="channel_name">Serviços do atalho</string>

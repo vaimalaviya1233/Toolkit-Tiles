@@ -4,6 +4,29 @@
 
     <string name="app_name" translatable="false">Toolkit Tiles</string>
 
+    <!--app about section -->
+
+    <string name="about_description">Simple, lightweight Quick Settings tiles that give you instant access to useful features without extra apps.</string>
+    <string name="about_version">Version: %s</string>
+    <!--links-->
+    <string name="about_wstxda" translatable="false">WSTxda</string>
+    <string name="about_developer">Developer</string>
+
+    <string name="about_github" translatable="false">Github</string>
+    <string name="about_repository">Source code repository</string>
+
+    <string name="about_contributors">Contributors</string>
+    <string name="about_contributors_summary">People who contributed to the project</string>
+
+    <!--update checker-->
+
+    <string name="update_checker_download_button">Download</string>
+    <!--updater messages-->
+    <string name="update_checker_no_update">No update available</string>
+    <string name="update_checker_update_available">New update available: %s</string>
+    <string name="update_checker_no_internet">No internet connection</string>
+    <string name="update_checker_generic_error">Something went wrong… Please try again later</string>
+
     <!--notification service-->
 
     <string name="channel_name">Tiles services</string>
