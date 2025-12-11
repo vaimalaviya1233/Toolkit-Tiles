@@ -1,4 +1,4 @@
-package com.wstxda.toolkit.tiles.compass
+ package com.wstxda.toolkit.tiles.compass
 
 import android.app.ForegroundServiceStartNotAllowedException
 import android.app.NotificationManager

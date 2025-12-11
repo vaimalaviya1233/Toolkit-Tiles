@@ -51,6 +51,7 @@
 
     <string name="tile_on">On</string>
     <string name="tile_off">Off</string>
+    <string name="tile_open">Tap to open</string>
     <string name="tile_setup">Tap to setup</string>
     <string name="tile_switch">Tap to switch</string>
     <string name="tile_unavailable">Unavailable</string>
@@ -153,4 +154,8 @@
     <string name="temperature_tile">Temperature</string>
     <!--tile label-->
     <string name="temperature_tile_format" translatable="false">%.1f°C</string>
+
+    <!--media output tile-->
+
+    <string name="media_output_tile">Media output</string>
 </resources>

@@ -45,6 +45,7 @@
 
     <string name="tile_on">Ligado</string>
     <string name="tile_off">Desligado</string>
+    <string name="tile_open">Toque para abrir</string>
     <string name="tile_setup">Toque para configurar</string>
     <string name="tile_switch">Toque para alternar</string>
     <string name="tile_unavailable">Indisponível</string>
@@ -139,4 +140,8 @@
     <!--device temperature tile-->
 
     <string name="temperature_tile">Temperatura</string>
+
+    <!--media output tile-->
+
+    <string name="media_output_tile">Saída de mídia</string>
 </resources>
