@@ -1,6 +1,6 @@
 # Toolkit Tiles – Essential Tools in Your Quick Settings
 
-A collection of simple and useful tools that live in your Android Quick Settings panel for instant access.
+A collection of simple, lightweight tools available as Android Quick Settings tiles, offering instant access to useful features without the need for extra apps.
 
 [![GitHub Actions Status](https://img.shields.io/github/actions/workflow/status/WSTxda/Toolkit-Tiles/.github%2Fworkflows%2Fandroid.yml?style=for-the-badge&logo=github-actions&labelColor=21262D&color=3FB950)](https://github.com/WSTxda/Toolkit-Tiles/actions)
 [![Platform](https://img.shields.io/badge/android-platform?style=for-the-badge&label=platform&labelColor=21262d&color=6e7681)](https://www.android.com)
@@ -10,53 +10,46 @@ A collection of simple and useful tools that live in your Android Quick Settings
 
 ![Banner](https://raw.githubusercontent.com/WSTxda/Toolkit-Tiles/main/images/Banner.svg)
 
-Designed to make your Android experience smoother and more productive, Toolkit Tiles puts practical tools right at your fingertips. Whether you need a quick measurement, a random decision, or an emergency tool, these tiles make your device capable or funny.
+Toolkit Tiles puts practical tools right at your fingertips.  
+Whether you need a quick measurement, a random decision, system controls, or an emergency tool, everything is just one swipe away in Quick Settings.
 
-## Available Tools
+## Available Tiles
 
-**🧭 Compass**  
-  Instantly find your bearings. This tile displays cardinal directions and degrees for precise navigation, using your device's built-in sensors.
+#### 🧭 Sensors & Measurement
+- **Bubble Level** — Surface alignment and tilt detection  
+- **Compass** — Cardinal directions and azimuth using device sensors  
+- **Lux Meter** — Ambient light intensity (lux)  
+- **Temperature** — Battery temperature  
 
-**📏 Bubble Level**  
-  Check the alignment of any surface with ease. Perfect for DIY projects, hanging pictures, or making sure furniture is level.
+#### 🎲 Utilities & Fun
+- **Coin Flip** — Virtual coin toss  
+- **Counter** — Increment, decrement and reset counters  
+- **Dice Roll** — Simulated dice roll  
 
-**💡 Lux Meter**  
-  Measure the ambient light intensity in lux. A handy tool for photographers, lighting designers, or anyone curious about their environment.
+#### ⚙️ System & Controls
+- **Caffeine** — Keep the screen awake  
+- **Device Memory** — Display use of RAM and internal storage  
+- **Lock Screen** — Lock the device instantly  
+- **Media / Sound Output** — Audio output selector  
+- **Screenshot** — Take screenshots from Quick Settings  
+- **Sound Mode** — Ring/vibrate/silent toggle  
 
-**🎲 Dice Roll**  
-  Need a standard six-sided die? This tile simulates a dice roll, perfect for board games or quick decisions.
+#### 🆘 Safety
+- **SOS** — Morse SOS using the camera flash  
 
-**🪙 Coin Flip**  
-  Let fate decide. Toss a virtual coin to settle a bet or make a choice on the go.
+## Installation & Usage
 
-**🔢 Counter**  
-  A set of three tiles (add, remove, reset) that acts as a simple tally counter, helping you keep track of anything you need.
+1. Swipe down twice to fully open the Quick Settings panel.
+2. Tap the **edit** button (pencil icon).
+3. Add the Toolkit Tiles you want to your active panel.
+4. Tap any tile to use it instantly.
 
-**🆘 SOS**  
-  Activates an SOS signal using your camera's flash. A critical safety tool that could be invaluable in an emergency.
+> [!IMPORTANT]
+> Tile availability and behavior may vary by device and Android version.  
+> Some tiles require specific system permissions, hardware features, or services.  
+> If a required permission or feature is missing or disabled, the tile may not work or may prompt you to enable it.
 
-**🔒 Lock Screen**  
-  Lock your device's screen with a single tap, saving your power button from wear and tear.
-
-**📸 Screenshot**  
-  Take a screenshot instantly from your Quick Settings panel. No more fumbling with button combinations.
-
-## Installation and Usage
-
-1. Download and install the latest APK from the [releases page](https://github.com/WSTxda/Toolkit-Tiles/releases/latest).
-2. Swipe down twice from the top of your screen to fully open the Quick Settings panel.
-3. Tap the edit button (usually a pencil icon) to customize the panel.
-4. Find the Toolkit Tiles in the available tiles section and drag them to your active panel.
-5. Tap any tile to use it instantly.
-
-> [!NOTE]
-> ### Requirements & Permissions
->
-> - **Accessibility Service:** Required for **Lock Screen** and **Screenshot** tiles.
-> - **Camera Access:** Required for the **SOS** tile.
-> - **Device Sensors:** **Compass**, **Bubble Level**, and **Lux Meter** require the appropriate sensors (magnetometer, accelerometer, light sensor).
-
----
+-------
 
 ### Download
 
@@ -66,8 +59,9 @@ Designed to make your Android experience smoother and more productive, Toolkit T
 ### Donate
 
 [<img src="https://raw.githubusercontent.com/WSTxda/WSTxda/main/images/PayPal.svg" alt="Donate with PayPal" height="80">](https://bit.ly/2lV0E6u)
-[<img src="https://raw.githubusercontent.com/WSTxda/WSTxda/main/images/BMC.svg" alt="Donate with BMC" height="80">](https://www.buymeacoffee.com/wstxda)
+[<img src="https://raw.githubusercontent.com/WSTxda/WSTxda/main/images/BMC.svg" alt="Donate with Buy Me a Coffee" height="80">](https://www.buymeacoffee.com/wstxda)
 
 ### Credits
 
-**[Mike Klimek](https://github.com/Tetr4)** for the original [CompassTile](https://github.com/Tetr4/CompassTile) project, inspired by a [CyanogenMod/LineageOS feature](https://review.lineageos.org/c/LineageOS/android_frameworks_base/+/179168).
+**[Mike Klimek](https://github.com/Tetr4)**  
+For the original [CompassTile](https://github.com/Tetr4/CompassTile) project, inspired by a CyanogenMod / LineageOS feature.
